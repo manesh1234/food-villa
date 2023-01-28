@@ -15,6 +15,7 @@ const Body = () => {
     const [filteredRestaurants, setFilteredRestaurants] = useState([]);
     const [allRestaurants, setAllRestaurants] = useState([]);
     const [searchText, setSearchText] = useState('');
+    const [location,setlocation] = useState('');
 
     const liveFilter = (e) => {
         setSearchText(e.target.value);
@@ -40,12 +41,25 @@ const Body = () => {
 
     const isOnline = useOnline();
     if (!isOnline) return <Offline />;
+    console.log(location);
+    const getlocation = () => {
+        console.log("pressed");
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition((position)=>{
+                setlocation(position);
+            })
+        }
+    }
 
     return (
         <>
             <div className="search-box">
                 <input type="text" name="search" id="search" value={searchText} onChange={e => liveFilter(e)} placeholder="Search for restaurants and food" />
             </div>
+            {
+                location?<h1>{location.coords.latitude}</h1>: <h1></h1>
+            } 
+             
             <div className="body">
                 {
                     allRestaurants?.length === 0 ? (<Shimmer />) :
@@ -54,6 +68,7 @@ const Body = () => {
                         })) : (<h2 className="no-results">We didn't find any matching results for "{searchText}"</h2>)
                 }
             </div>
+            <button onClick={()=>getlocation()}>click me</button>
         </>
     )
 }
