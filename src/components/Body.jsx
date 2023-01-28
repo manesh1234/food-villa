@@ -26,7 +26,7 @@ const Body = () => {
         else setFilteredRestaurants(allRestaurants);
     }
 
-    useEffect(() => {
+    function setLocation(){
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 fetch(`https://www.swiggy.com/dapi/restaurants/list/v5?lat=${position?.coords?.latitude}&lng=${position?.coords?.longitude}&page_type=DESKTOP_WEB_LISTING`)
@@ -37,11 +37,15 @@ const Body = () => {
                     })
             })
         }
+    }
+
+    useEffect(() => {
+        setLocation();
     }, [])
 
     const isOnline = useOnline();
     if (!isOnline) return <Offline />;
-    console.log(location);
+    console.log(window.innerWidth);
     const getlocation = () => {
         console.log("pressed");
         if(navigator.geolocation){
