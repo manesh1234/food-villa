@@ -26,14 +26,16 @@ const Body = () => {
     }
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            fetch(`https://www.swiggy.com/dapi/restaurants/list/v5?lat=${position?.coords?.latitude}&lng=${position?.coords?.longitude}&page_type=DESKTOP_WEB_LISTING`)
-                .then(response => response.json())
-                .then(data => {
-                    setAllRestaurants(data?.data?.cards[2]?.data?.data?.cards);
-                    setFilteredRestaurants(data?.data?.cards[2]?.data?.data?.cards);
-                })
-        })
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                fetch(`https://www.swiggy.com/dapi/restaurants/list/v5?lat=${position?.coords?.latitude}&lng=${position?.coords?.longitude}&page_type=DESKTOP_WEB_LISTING`)
+                    .then(response => response.json())
+                    .then(data => {
+                        setAllRestaurants(data?.data?.cards[2]?.data?.data?.cards);
+                        setFilteredRestaurants(data?.data?.cards[2]?.data?.data?.cards);
+                    })
+            })
+        }
     }, [])
 
     const isOnline = useOnline();
