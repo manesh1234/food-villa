@@ -15,8 +15,11 @@ const Body = () => {
     const [filteredRestaurants, setFilteredRestaurants] = useState([]);
     const [allRestaurants, setAllRestaurants] = useState([]);
     const [searchText, setSearchText] = useState('');
-    const [position, setPosition] = useState(null);
-    const [error, setError] = useState(null);
+    const [positionObj, setPositionObj] = useState({
+        position: null,
+        error: null,
+        modal: true
+    })
 
     const liveFilter = (e) => {
         setSearchText(e.target.value);
@@ -27,30 +30,59 @@ const Body = () => {
         else setFilteredRestaurants(allRestaurants);
     }
 
-    useEffect(() => {
+    function setLocationData() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
-                setPosition(position);
+                setPositionObj((positionObj)=>({
+                    ...positionObj,
+                    position : position 
+                }))
                 fetch(`https://www.swiggy.com/dapi/restaurants/list/v5?lat=${position?.coords?.latitude}&lng=${position?.coords?.longitude}&page_type=DESKTOP_WEB_LISTING`)
                     .then(response => response.json())
                     .then(data => {
                         setAllRestaurants(data?.data?.cards[2]?.data?.data?.cards);
                         setFilteredRestaurants(data?.data?.cards[2]?.data?.data?.cards);
                     })
-            },(err)=>{
-                setError(err);
+            }, (err) => {
+                setPositionObj((positionObj) => ({
+                    ...positionObj,
+                    error : err
+                }))
             })
-        } else setError("Geolocation is not available in this browser");
+        } else setPositionObj((positionObj)=>({
+            ...positionObj,
+            error : "Geolocation is not available in this browser"
+        }))
+    }
+
+    useEffect(() => {
+        setLocationData();
     }, [])
+
 
     const isOnline = useOnline();
     if (!isOnline) return <Offline />;
 
-    if(error){
-        return <div>{error}</div>
+    if (window.innerWidth < 500 && positionObj.modal && !positionObj.position) {
+        return (
+            <div className="modal">
+                <div className="overlay">
+                    <div className="modal-content">
+                        <h2>Welcome to Food Villa</h2>
+                        <button onClick={() => {
+                            setLocationData();
+                        }}>🔴detect current location</button>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
-    if (position) {
+    if (positionObj.error) {
+        return <div>{positionObj.error.message}</div>
+    }
+    
+    if (positionObj.position) {
         return (
             <>
                 <div className="search-box">
