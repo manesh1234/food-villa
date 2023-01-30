@@ -77,6 +77,11 @@ ul, li {
     transform: scale(1.1);
 }
 
+.nav-toggle {
+    cursor: pointer;
+    display: none;
+}
+
 .search-box {
     display: flex;
     align-items: center;
@@ -88,7 +93,7 @@ ul, li {
     padding-left: 16px;
     font-size: 1.2rem;
     line-height: 40px;
-    width: 40%;
+    width: 440px;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -100,6 +105,10 @@ ul, li {
     font-weight: 600;
 }
 
+.search-icon{
+    position: relative;
+    right: 30px;
+}
 
 .body {
     margin: 25px;
@@ -386,3 +395,26 @@ ul, li {
     max-width: 800px;
     min-width: 350px;
 }
+
+/* media queries for tablets */
+@media screen and (max-width:800px) {
+    .header-links {
+        display: none;
+    }
+
+    .nav-toggle {
+        width: 30px;
+        height: 40px;
+        display: block;
+        margin-right: 50px;
+    }
+
+
+}
+
+/* end of media queries for tablets */
+
+/* media queries for smart phones */
+@media screen and (max-width:350px) {}
+
+/* end of media queries for smart phones */

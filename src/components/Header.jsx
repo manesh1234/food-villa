@@ -1,5 +1,6 @@
 import logo from "../assets/logo.png";
 import { Link } from 'react-router-dom';
+import { MdOutlineSort } from 'react-icons/md';
 
 const Title = () => {
     return (
@@ -21,6 +22,7 @@ const HeaderComponent = (
             <li><Link to="/contact">Contact</Link></li>
             <li>Cart</li>
         </ul>
+        <MdOutlineSort className="nav-toggle" />
     </div>
 )
 

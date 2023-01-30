@@ -4,6 +4,7 @@ import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnline from "../utils/useOnline";
 import Offline from "./Offline";
+import { BsSearch } from 'react-icons/bs';
 
 function filterData(searchText, restaurants) {
     return restaurants.filter((restaurant) =>
@@ -30,13 +31,9 @@ const Body = () => {
         else setFilteredRestaurants(allRestaurants);
     }
 
-    function setLocationData() {
+    useEffect(() => {
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                setPositionObj((positionObj)=>({
-                    ...positionObj,
-                    position : position 
-                }))
+            navigator.geolocation.getCurrentPosition(async (position) => {
                 fetch(`https://www.swiggy.com/dapi/restaurants/list/v5?lat=${position?.coords?.latitude}&lng=${position?.coords?.longitude}&page_type=DESKTOP_WEB_LISTING`)
                     .then(response => response.json())
                     .then(data => {
@@ -46,60 +43,38 @@ const Body = () => {
             }, (err) => {
                 setPositionObj((positionObj) => ({
                     ...positionObj,
-                    error : err
+                    error: err
                 }))
             })
-        } else setPositionObj((positionObj)=>({
+        } else setPositionObj((positionObj) => ({
             ...positionObj,
-            error : "Geolocation is not available in this browser"
+            error: "Geolocation is not available in this browser"
         }))
-    }
-
-    useEffect(() => {
-        setLocationData();
     }, [])
-
 
     const isOnline = useOnline();
     if (!isOnline) return <Offline />;
 
-    if (window.innerWidth < 500 && positionObj.modal && !positionObj.position) {
-        return (
-            <div className="modal">
-                <div className="overlay">
-                    <div className="modal-content">
-                        <h2>Welcome to Food Villa</h2>
-                        <button onClick={() => {
-                            setLocationData();
-                        }}>🔴detect current location</button>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
     if (positionObj.error) {
         return <div>{positionObj.error.message}</div>
     }
-    
-    if (positionObj.position) {
-        return (
-            <>
-                <div className="search-box">
-                    <input type="text" name="search" id="search" value={searchText} onChange={e => liveFilter(e)} placeholder="Search for restaurants and food" />
-                </div>
-                <div className="body">
-                    {
-                        allRestaurants?.length === 0 ? (<Shimmer />) :
-                            filteredRestaurants?.length > 0 ? (filteredRestaurants.map(restaurant => {
-                                return <Link to={"/restaurant/" + restaurant.data.id} key={restaurant.data.id}><RestaurantCard {...restaurant.data} /></Link>
-                            })) : (<h2 className="no-results">We didn't find any matching results for "{searchText}"</h2>)
-                    }
-                </div>
-            </>
-        )
-    }
-    return <Shimmer />
+
+    return (
+        <>
+            <div className="search-box">
+                <input type="text" name="search" id="search" value={searchText} onChange={e => liveFilter(e)} placeholder="Search for restaurants and food" />
+                <BsSearch className="search-icon"/>
+            </div>
+            <div className="body">
+                {
+                    allRestaurants?.length === 0 ? (<Shimmer />) :
+                        filteredRestaurants?.length > 0 ? (filteredRestaurants.map(restaurant => {
+                            return <Link to={"/restaurant/" + restaurant.data.id} key={restaurant.data.id}><RestaurantCard {...restaurant.data} /></Link>
+                        })) : (<h2 className="no-results">We didn't find any matching results for "{searchText}"</h2>)
+                }
+            </div>
+        </>
+    )
 }
 
 export default Body;
