@@ -1,4 +1,4 @@
-import { IMAGE_CDN_URL } from '../Constants';
+import { IMAGE_CDN_URL } from '../utils/constants';
 import { AiFillStar } from 'react-icons/ai';
 
 const RestaurantCard = ({ cloudinaryImageId, name, cuisines, area, avgRating, maxDeliveryTime, costForTwoString }) => {
@@ -9,7 +9,7 @@ const RestaurantCard = ({ cloudinaryImageId, name, cuisines, area, avgRating, ma
             <div>{cuisines.join(", ")}</div>
             <div>{area}</div>
             <div className="card-footer">
-                <div className='card-rating' style={{ backgroundColor: (Number(avgRating) >= 4) ? "rgb(72, 196, 121)" : (avgRating === '--') ? "rgb(189, 35, 15)" : "rgb(219, 124, 56)" }}>
+                <div className='card-rating' style={{ backgroundColor: (Number(avgRating) >= 4) ? "rgb(72, 196, 121)" : (avgRating === '--') ? "rgb(209, 74, 40)" : "rgb(219, 124, 56)" }}>
                     <AiFillStar />
                     <div>{avgRating}</div>
                 </div>

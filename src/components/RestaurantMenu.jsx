@@ -1,14 +1,20 @@
 import { useParams } from 'react-router-dom';
-import { IMAGE_CDN_URL } from '../Constants';
+import { IMAGE_CDN_URL } from '../utils/constants';
 import { AiFillStar } from 'react-icons/ai';
+import ShimmerMenu from './ShimmerMenu';
 import RestaurantMenuCard from "./RestaurantMenuCard";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import CartCard from './CartCard';
+import { useSelector } from 'react-redux';
+import { EmptyCart } from './Cart';
+import useScreenWidth from '../utils/useScreenWidth';
 
 const RestaurantMenu = () => {
     const { id } = useParams();
     const restaurant = useRestaurantMenu(id);
-
-    return !restaurant ? <h1>Fetching</h1> : (
+    const cartItems = useSelector(store => store.cart.items);
+    const screenWidth = useScreenWidth();
+    return !restaurant ? <ShimmerMenu /> : (
         <>
             <div className="restaurant-menu-main">
                 <img src={IMAGE_CDN_URL + restaurant.cloudinaryImageId} alt={restaurant.name} />
@@ -31,11 +37,20 @@ const RestaurantMenu = () => {
             <div className="restaurant-menu-recommendation">
                 Recommended <h3>{Object.values(restaurant.menu.items).length} Items</h3>
             </div>
-            <div className="restaurant-menu-cards">
+            <div className='restaurant-menu-cards-wrap'>
+                <div className="restaurant-menu-cards">
+                    {
+                        Object.values(restaurant?.menu?.items).map(item => {
+                            return <RestaurantMenuCard {...item} key={item.id} />
+                        })
+                    }
+                </div>
                 {
-                    Object.values(restaurant?.menu?.items).map(item => {
-                        return <RestaurantMenuCard {...item} key={item.id} />
-                    })
+                    screenWidth > 950 && <div className='restaurant-menu-cart'>
+                        {
+                            cartItems.length === 0 ? <EmptyCart atRestaurantMenu={true} /> : <CartCard />
+                        }
+                    </div>
                 }
             </div>
         </>

@@ -34,11 +34,12 @@ const Body = () => {
     useEffect(() => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {
-                fetch(`https://www.swiggy.com/dapi/restaurants/list/v5?lat=${position?.coords?.latitude}&lng=${position?.coords?.longitude}&page_type=DESKTOP_WEB_LISTING`)
+                // fetch(`https://www.swiggy.com/dapi/restaurants/list/v5?lat=${position?.coords?.latitude}&lng=${position?.coords?.longitude}&page_type=DESKTOP_WEB_LISTING`)
+                fetch(`https://restaurants-api-9zvz.onrender.com/restaurants?lon=${position.coords.longitude}&lat=${position.coords.latitude}`)
                     .then(response => response.json())
                     .then(data => {
-                        setAllRestaurants(data?.data?.cards[2]?.data?.data?.cards);
-                        setFilteredRestaurants(data?.data?.cards[2]?.data?.data?.cards);
+                        setAllRestaurants(data);
+                        setFilteredRestaurants(data);
                     })
             }, (err) => {
                 setPositionObj((positionObj) => ({
@@ -63,7 +64,7 @@ const Body = () => {
         <>
             <div className="search-box">
                 <input type="text" name="search" id="search" value={searchText} onChange={e => liveFilter(e)} placeholder="Search for restaurants and food" />
-                <BsSearch className="search-icon"/>
+                <BsSearch className="search-icon" />
             </div>
             <div className="body">
                 {

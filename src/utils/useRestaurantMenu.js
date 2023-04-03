@@ -5,10 +5,11 @@ const useRestaurantMenu = (resId) => {
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-                fetch(`https://www.swiggy.com/dapi/menu/v4/full?${position.coords.latitude}&lng=${position.coords.longitude}&menuId=${resId}`)
+                // fetch(`https://www.swiggy.com/dapi/menu/v4/full?${position.coords.latitude}&lng=${position.coords.longitude}&menuId=${resId}`)
+                fetch(`https://restaurants-api-9zvz.onrender.com/restaurants/${resId}`)
                     .then(response => response.json())
                     .then(data => {
-                        setRestaurant(data?.data);
+                        setRestaurant(data?.menu?.data);
                     })
             })
         }
