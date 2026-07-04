@@ -9,16 +9,17 @@ const cartSlice = createSlice({
         addItem: (state, action) => {
             const indx = state.items.findIndex(item => item.id === action.payload.id);
             if(indx === -1){
-                state.items.push(action.payload);
-                state.items[state.items.length-1].cnt = 1;
+                state.items.push({...action.payload, cnt: 1});
             } 
             else state.items[indx].cnt++;            
         },
         removeItem: (state, action) => {
-            const indx = state.items.findIndex(item => item.id===action.payload.id);
-            state.items[indx].cnt--;
-            if(state.items[indx].cnt===0) {
-                state.items.splice(indx,1);
+            const indx = state.items.findIndex(item => item.id === action.payload.id);
+            if(indx !== -1) {
+                state.items[indx].cnt--;
+                if(state.items[indx].cnt <= 0) {
+                    state.items.splice(indx, 1);
+                }
             }
         },
         clearCart: (state) => {
@@ -30,5 +31,3 @@ const cartSlice = createSlice({
 export const { addItem, removeItem, clearCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
-
-

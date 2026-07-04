@@ -1,20 +1,39 @@
 import { useState, useEffect } from "react";
+import { GET_RESTAURANT_MENU_URL } from "./constants";
 
 const useRestaurantMenu = (resId) => {
     const [restaurant, setRestaurant] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                // fetch(`https://www.swiggy.com/dapi/menu/v4/full?${position.coords.latitude}&lng=${position.coords.longitude}&menuId=${resId}`)
-                fetch(`https://restaurants-api-9zvz.onrender.com/restaurants/${resId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        setRestaurant(data?.menu?.data);
-                    })
+        if (!resId) return;
+
+        const controller = new AbortController();
+        setLoading(true);
+        setError(null);
+
+        fetch(GET_RESTAURANT_MENU_URL(resId), { signal: controller.signal })
+            .then(response => {
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                return response.json();
             })
-        }
-    }, [resId])
-    return restaurant;
-}
+            .then(data => {
+                setRestaurant(data?.data || null);
+                setError(null);
+            })
+            .catch(err => {
+                if (err.name !== 'AbortError') {
+                    setError(err.message);
+                    setRestaurant(null);
+                }
+            })
+            .finally(() => setLoading(false));
+
+        return () => controller.abort();
+    }, [resId]);
+
+    return { restaurant, error, loading };
+};
 
 export default useRestaurantMenu;

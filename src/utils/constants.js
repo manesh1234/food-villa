@@ -1,6 +1,13 @@
 
-export const IMAGE_CDN_URL = "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/";
+export const IMAGE_CDN_URL = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
 
-export const SIGN_IN_URL = "https://restaurants-api-9zvz.onrender.com/signin";
+export const BASE_API_URL = "https://foodvillabackend.vercel.app";
 
-export const SIGN_UP_URL = "https://restaurants-api-9zvz.onrender.com/signup";
+export const SIGN_IN_URL = `${BASE_API_URL}/auth/login`;
+export const SIGN_UP_URL = `${BASE_API_URL}/auth/signup`;
+export const UPDATE_USER = `${BASE_API_URL}/auth/update-user`;
+
+export const GET_CITY_COORDS_URL = (city) => `${BASE_API_URL}/restaurants/getCityCoords?city=${encodeURIComponent(city)}`;
+export const GET_ALL_RESTAURANTS_BY_CITY_URL = (city) => `${BASE_API_URL}/restaurants/getAllRestaurants?city=${encodeURIComponent(city)}`;
+export const GET_ALL_RESTAURANTS_BY_GEO_URL = (lat, lng) => `${BASE_API_URL}/restaurants/getAllRestaurants?lat=${lat}&lng=${lng}`;
+export const GET_RESTAURANT_MENU_URL = (resId) => `${BASE_API_URL}/restaurants/getRestaurantMenu/${resId}`;

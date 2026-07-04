@@ -1,10 +1,16 @@
-import { IMAGE_CDN_URL } from '../utils/constants';
+import React from 'react';
 import { AiFillStar } from 'react-icons/ai';
+import { IMAGE_CDN_URL } from '../utils/constants';
+import PLACEHOLDER_IMAGE from '../assets/placeholder-light.png';
 
 const RestaurantCard = ({ cloudinaryImageId, name, cuisines, area, avgRating, maxDeliveryTime, costForTwoString }) => {
     return (
         <div className="card">
-            <img src={IMAGE_CDN_URL + cloudinaryImageId} alt="" />
+            <img src={IMAGE_CDN_URL + cloudinaryImageId} alt={name} 
+                onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = PLACEHOLDER_IMAGE;   
+                }} />
             <div>{name}</div>
             <div>{cuisines.join(", ")}</div>
             <div>{area}</div>
@@ -22,4 +28,4 @@ const RestaurantCard = ({ cloudinaryImageId, name, cuisines, area, avgRating, ma
     )
 }
 
-export default RestaurantCard;
+export default React.memo(RestaurantCard);
