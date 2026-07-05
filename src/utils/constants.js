@@ -1,7 +1,8 @@
 
 export const IMAGE_CDN_URL = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
 
-export const BASE_API_URL = "https://foodvillabackend.vercel.app";
+//export const BASE_API_URL = "http://localhost:8080"; // Local backend URL
+export const BASE_API_URL = "https://foodvillabackend.vercel.app/"; // Deployed backend URL
 
 export const SIGN_IN_URL = `${BASE_API_URL}/auth/login`;
 export const SIGN_UP_URL = `${BASE_API_URL}/auth/signup`;

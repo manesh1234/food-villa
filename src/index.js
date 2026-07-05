@@ -5,6 +5,7 @@ import Body from "./components/Body";
 import HeaderComponent, { Modal } from './components/Header';
 import Cart from "./components/Cart";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 import { Provider } from "react-redux";
 import store from "./utils/store";
 import UserAuth from "./utils/UserAuth";
@@ -81,6 +82,7 @@ const AppLayout = () => {
     return (
         <Provider store={store}>
             <UserAuth.Provider value={providerValue} >
+                <ScrollToTop />
                 <div className="main-block">
                     <HeaderComponent />
                     <Outlet />
